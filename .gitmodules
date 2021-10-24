@@ -1,0 +1,3 @@
+[submodule "plthook_c"]
+	path = plthook_c
+	url = https://github.com/kubo/plthook
