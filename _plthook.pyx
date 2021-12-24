@@ -29,6 +29,9 @@ def tryDecode(bmsg):
 
 import _ctypes
 
+class PLTHookInternalException(Exception):
+    pass
+
 class _plthook_t:
     def __init__(self, name, *args):
         cdef plthook_t *innerPtr = NULL;
@@ -46,7 +49,7 @@ class _plthook_t:
         status = opener(*args)
         if status != PLTHOOK_SUCCESS:
             errmsg = plthook_error()
-            raise Exception("status: %d, msg: %s" % (status, tryDecode(errmsg)))
+            raise PLTHookInternalException("status: %d, msg: %s" % (status, tryDecode(errmsg)))
         self._plthook_obj = <uintptr_t>innerPtr
     
     def __del__(self):
@@ -95,6 +98,6 @@ class _plthook_t:
         status = plthook_replace(<plthook_t *>_innerPtr, funcname, <void *>_funcaddr, &oldFunc)
         if status != PLTHOOK_SUCCESS:
             errmsg = plthook_error()
-            raise Exception("status: %d, msg: %s" % (status, tryDecode(errmsg)))
+            raise PLTHookInternalException("status: %d, msg: %s" % (status, tryDecode(errmsg)))
         
         return <uintptr_t>oldFunc
