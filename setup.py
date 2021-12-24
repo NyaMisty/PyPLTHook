@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 import platform
+from glob import glob
 
 from setuptools import setup, Extension, find_packages
 from distutils.extension import Extension
+
 #from Cython.Build import cythonize
 from Cython.Distutils import build_ext
 
@@ -33,11 +36,12 @@ def _get_ext_modules():
     ext_modules += [
         Extension('_plthook', 
                     sources=_cython_src + _plthook_src, 
-                    include_dirs='plthook_c/'),
+                    include_dirs='plthook_c/',
+                    #depends=[y for x in os.walk('.') for y in glob(os.path.join(x[0], '[!.]*'))]
+                ),
     ]
     
     return ext_modules
-
 
 setup(name = MODULE_NAME,
    version = VERSION,
@@ -45,7 +49,8 @@ setup(name = MODULE_NAME,
    author = AUTHOR,
    author_email = AUTHOR_EMAIL,
    url = URL,
-   packages = find_packages(),
+   #packages = find_packages(),
+   py_modules=['plthook'],
    cmdclass = {'build_ext': build_ext},
    ext_modules = _get_ext_modules(),
    include_dirs = [],

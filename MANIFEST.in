@@ -1,0 +1,6 @@
+include version.py
+graft plthook_c
+prune plthook_c/images
+prune plthook_c/test
+prune plthook_c/.*
+exclude plthook_c/.*
