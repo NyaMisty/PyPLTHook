@@ -53,8 +53,11 @@ class _plthook_t:
         self._plthook_obj = <uintptr_t>innerPtr
     
     def __del__(self):
-        cdef plthook_t *innerPtr = <plthook_t *>self._plthook_obj
-        plthook_close(innerPtr)
+        # convert to uintptr_t beforehand, so that Cython won't think it's string
+        cdef uintptr_t _innerPtr = int(self._plthook_obj)
+        if _innerPtr != 0:
+            plthook_close(<plthook_t *>_innerPtr)
+            self._plthook_obj = 0
     
     @staticmethod
     def open(filename):
